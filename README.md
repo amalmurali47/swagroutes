@@ -2,7 +2,7 @@
 
 swagroutes is a command-line tool that extracts and lists API routes from Swagger files in YAML or JSON format. It simplifies the process of fetching the routes provided by an API and supports processing multiple files or directories at once.
 
-![](https://user-images.githubusercontent.com/3582096/232892882-7755d610-a85a-4c21-8a35-543d24204d23.png)
+![](https://user-images.githubusercontent.com/3582096/233068257-29adfadd-8cd3-45fd-9d1d-f22a9772d139.png)
 
 ## Install
 
