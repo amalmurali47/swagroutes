@@ -15,6 +15,22 @@ pip install swagroutes
 pip install -U swagroutes
 ```
 
+## Help
+```
+usage: swagroutes [-h] [-o OUTPUT] [-p] input [input ...]
+
+Extract routes from Swagger files.
+
+positional arguments:
+  input                 Input file(s) or directory containing Swagger files.
+
+options:
+  -h, --help            show this help message and exit
+  -o OUTPUT, --output OUTPUT
+                        Output file to store the results.
+  -p, --include-params  Include query parameters in the extracted routes.
+```
+
 ## Usage
 To use swagroutes, simply provide input files or directories containing Swagger files as arguments. The tool will process the files and print the extracted routes.
 
@@ -43,6 +59,11 @@ swagroutes directory/
 swagroutes file1.yaml directory1/ file2.json directory2/
 ```
 
+#### Extract parameters
+```bash
+swagroutes file1.yaml --include-params
+```
+
 #### Output to a file
 Save the extracted routes to an output file using the `-o` or `--output` option:
 
@@ -52,8 +73,8 @@ swagroutes file.yaml -o output.txt
 
 
 ## Examples
-Given a Swagger file with the following content:
 
+**Input:**
 ```yaml
 basePath: /api
 paths:
@@ -64,10 +85,39 @@ paths:
     put: {}
 ```
 
-swagroutes will output:
+**Output:**
 
 ```
 GET /api/users
 POST /api/users
 PUT /api/profile/{profile_id}
+```
+
+---
+
+**Input:**
+```yaml
+basePath: /api/v1
+paths:
+  /users:
+    get:
+      parameters:
+        - name: limit
+          in: query
+        - name: offset
+          in: query
+
+  /users/{userId}:
+    get:
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          type: string
+```
+
+**Output:**
+```
+GET /api/v1/users/{userId}
+GET /api/v1/users?limit&offset
 ```
