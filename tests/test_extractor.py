@@ -29,16 +29,35 @@ class TestExtractor(unittest.TestCase):
             "basePath": "/api",
             "paths": {
                 "/users": {
-                    "post": {},
-                    "parameters": {}
+                    "get": {
+                        "parameters": [
+                            {
+                                "name": "limit",
+                                "in": "query",
+                                "type": "integer"
+                            },
+                            {
+                                "name": "offset",
+                                "in": "query",
+                                "type": "integer"
+                            }
+                        ]
+                    }
                 }
             }
         }
-        expected_output = {
-            "POST /api/users",
+        expected_output_without_params = {
+            "GET /api/users"
         }
-        routes = extract_routes(swagger_data)
-        self.assertEqual(expected_output, routes)
+        routes_without_params = extract_routes(swagger_data, include_params=False)
+        self.assertEqual(expected_output_without_params, routes_without_params)
+
+        expected_output_with_params = {
+            "GET /api/users?limit&offset"
+        }
+        routes_with_params = extract_routes(swagger_data, include_params=True)
+        self.assertEqual(expected_output_with_params, routes_with_params)
+
 
 if __name__ == "__main__":
     unittest.main()
