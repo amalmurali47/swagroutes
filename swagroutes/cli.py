@@ -7,6 +7,7 @@ def main():
     parser = argparse.ArgumentParser(description='Extract routes from Swagger files.')
     parser.add_argument('input', metavar='input', type=str, nargs='+', help='Input file(s) or directory containing Swagger files.')
     parser.add_argument('-o', '--output', type=str, help='Output file to store the results.')
+    parser.add_argument('-p', '--include-params', action='store_true', help='Include query parameters in the extracted routes.')
 
     args = parser.parse_args()
 
@@ -20,7 +21,7 @@ def main():
             input_files.extend(path.glob('**/*.yaml'))
             input_files.extend(path.glob('**/*.json'))
 
-    all_routes = process_swagger_files(input_files)
+    all_routes = process_swagger_files(input_files, args.include_params)
 
     if args.output:
         with open(args.output, 'w') as outfile:

@@ -13,7 +13,7 @@ def load_json_file(file_path):
         return json.load(file)
 
 
-def extract_routes(swagger_data):
+def extract_routes(swagger_data, include_params=False):
     routes = set()
     base_path = swagger_data.get('basePath', '')
     paths = swagger_data.get('paths', {})
@@ -21,15 +21,20 @@ def extract_routes(swagger_data):
     http_methods = {'get', 'put', 'post', 'delete', 'options', 'head', 'patch', 'trace'}
 
     for path, methods in paths.items():
-        for method in methods.keys():
+        for method, details in methods.items():
             if method.lower() in http_methods:
                 route = f'{method.upper()} {base_path}{path}'
+                if include_params:
+                    parameters = details.get('parameters', [])
+                    query_params = [param['name'] for param in parameters if param['in'] == 'query']
+                    if query_params:
+                        route += '?' + '&'.join(query_params)
                 routes.add(route)
 
     return routes
 
 
-def process_swagger_files(files):
+def process_swagger_files(files, include_params=False):
     all_routes = set()
 
     for file in files:
@@ -40,7 +45,7 @@ def process_swagger_files(files):
             swagger_data = load_json_file(file)
         else:
             continue
-        routes = extract_routes(swagger_data)
+        routes = extract_routes(swagger_data, include_params)
         all_routes.update(routes)
 
     return all_routes
